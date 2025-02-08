@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>siCCest website ever</title>
+		<script type = "text/javascript" 
+		src = "{{ url_for('static', filename = 'script.js') }}" ></script>
+		<link rel="stylesheet" href="{{ url_for('static', filename = 'styles.css') }}">
+	</head>
+   
+	<body>
+		<div class="center small-field">
+			<p>Nom :</p>
+			<p><input type="text" id="name"></p>
+			<p>Mot de passe :</p>
+			<p><input type="text" id="psw1"></p>
+			<p>Répetez le mot le passe :</p>
+			<p><input type="text" id="psw2"></p>
+			<p><button onclick="createResearch()">Créer recherche</button></p>
+			<div style="color: red;" id="error-psw-div"></div>
+		</div>
+	</body>
+</html>

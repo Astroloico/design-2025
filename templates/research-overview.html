@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>siCCest website ever</title>
+		<script type = "text/javascript" 
+		src = "{{ url_for('static', filename = 'script.js') }}" ></script>
+		<link rel="stylesheet" href="{{ url_for('static', filename = 'styles.css') }}">
+	</head>
+   
+	<body onload="fetchStatsIntervall()">
+		<p>Identifiant : {{ research_id }}</p>
+		<div id="statistics"></div>
+	</body>
+</html>

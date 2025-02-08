@@ -1,0 +1,13 @@
+.center {
+    margin-inline: auto;
+    max-width: fit-content;
+    max-height: fit-content;
+    text-align: center;
+}
+.small-field {
+    border-width: 10px;
+    border-radius: 20px;
+    border-color: black;
+    border-style: solid;
+    padding: 20px;
+}
