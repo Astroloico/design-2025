@@ -37,6 +37,9 @@ def get_research_by_id(id_number):
 			print(id_number, r.id_number)
 	return None
 
+def get_key(password):
+	return str(hash(password))
+
 @app.route("/")
 @app.route("/index")
 @app.route("/index.html")
@@ -52,7 +55,7 @@ def research_creation_page():
 def create_page(name, password):
 	try:
 		database.append(Research(name, password))
-		return app.redirect(f"/research/{database[len(database) - 1].id_number}/overview/{hash(database[len(database) - 1].password_hash)}")
+		return app.redirect(f"/research/{database[len(database) - 1].id_number}/overview/{get_key(database[len(database) - 1].password_hash)}")
 	except Exception as e:
 		return str(e)
 
@@ -63,7 +66,7 @@ def research_overview(id_number, key):
 		r = get_research_by_id(int(id_number))
 		if not r:
 			return "404 - research not found"
-		if hash(r.password_hash) != int(key):
+		if get_key(r.password_hash) != int(key):
 			return "lol nice try"
 		return render_template("research-overview.html", research_id=r.id_number)
 	except Exception as e:
@@ -76,7 +79,7 @@ def get_stats(id_number, key):
 		r = get_research_by_id(int(id_number))
 		if not r:
 			return "404 - research not found"
-		if hash(r.password_hash) != int(key):
+		if get_key(r.password_hash) != int(key):
 			return "lol nice try"
 		processed = r.get_processed_data()
 		return render_template("stats.html",
@@ -91,7 +94,17 @@ def get_stats(id_number, key):
 def login():
 	return render_template("login.html")
 
-
+@app.route("/login-research/<name>/<password>/<id_number>")
+def fetch_ketch(name, password, id_number):
+	try:
+		r = get_research_by_id(int(id_number))
+		if not r:
+			return "r"
+		if get_key(r.password_hash) != int(get_key(hash(password))):
+			return "p"
+		return key(r.password_hash)
+	except Exception as e:
+		return "e " + str(e)
 
 if __name__ == '__main__':
 	app.run(debug = True)
