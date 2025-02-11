@@ -17,7 +17,7 @@ function createResearch() {
 	location.replace("/create-research/" + nameField + "/" + psw + "")
 }
 
-function loginResearch() {
+async function loginResearch() {
 	document.getElementById("error-psw-div").innerHTML = "";
 	let nameField = document.getElementById("name").value;
 	if (nameField.length == 0) {
@@ -29,12 +29,12 @@ function loginResearch() {
 		document.getElementById("error-psw-div").innerHTML = "Veuillez entrer un mot de passe";
 		return "password non-existence error";
 	}
-	let rid = document.getElementById("rid")
+	let rid = document.getElementById("rid").value
 	if (rid.length == 0) {
 		document.getElementById("error-psw-div").innerHTML = "Veuillez entrer un identifiant";
 		return "rid not matching error";
 	}
-	key = fetchKey(rid, nameField, psw).innerHTML
+	key = await fetchKey(rid, nameField, psw);
 	if (key == "r") {
 		document.getElementById("error-psw-div").innerHTML = "Aucune recherche correspondante";
 		return "rid not matching db error";
@@ -52,7 +52,7 @@ function loginResearch() {
 }
 
 async function fetchKey(rid, name, password) {
-	let key = (await (await fetch("/login-research/" + name + "/" + password + "/" + rid)).text()).toString();
+	let key = (await (await fetch("/login-research/" + name + "/" + password + "/" + rid)).text());
 	return key;
 }
 

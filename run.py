@@ -66,7 +66,7 @@ def research_overview(id_number, key):
 		r = get_research_by_id(int(id_number))
 		if not r:
 			return "404 - research not found"
-		if get_key(r.password_hash) != int(key):
+		if get_key(r.password_hash) != key:
 			return "lol nice try"
 		return render_template("research-overview.html", research_id=r.id_number)
 	except Exception as e:
@@ -79,7 +79,7 @@ def get_stats(id_number, key):
 		r = get_research_by_id(int(id_number))
 		if not r:
 			return "404 - research not found"
-		if get_key(r.password_hash) != int(key):
+		if get_key(r.password_hash) != key:
 			return "lol nice try"
 		processed = r.get_processed_data()
 		return render_template("stats.html",
@@ -92,7 +92,7 @@ def get_stats(id_number, key):
 @app.route("/research/login")
 @app.route("/research/login.html")
 def login():
-	return render_template("login.html")
+	return render_template("login-window.html")
 
 @app.route("/login-research/<name>/<password>/<id_number>")
 def fetch_ketch(name, password, id_number):
@@ -100,9 +100,9 @@ def fetch_ketch(name, password, id_number):
 		r = get_research_by_id(int(id_number))
 		if not r:
 			return "r"
-		if get_key(r.password_hash) != int(get_key(hash(password))):
+		if get_key(r.password_hash) != get_key(hash(password)):
 			return "p"
-		return key(r.password_hash)
+		return get_key(r.password_hash)
 	except Exception as e:
 		return "e " + str(e)
 
