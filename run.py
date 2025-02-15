@@ -7,13 +7,13 @@ database = []
 id_counter = 0
 
 class Research():
-	id_number: int
+	rid: int
 	name: str
 	password_hash: int
 	data: list
 	def __init__(self, name: str, password: str) -> None:
 		global id_counter
-		self.id_number = id_counter
+		self.rid = id_counter
 		id_counter += 1
 		self.name = name
 		self.password_hash = hash(password)
@@ -28,12 +28,12 @@ class Research():
 		data = self.data if self.data else [0]
 		return [data, stats.fmean(data), stats.median(data)]
 
-def get_research_by_id(id_number):
+def get_research_by_id(rid):
 	for r in database:
-		if r.id_number == id_number:
+		if r.rid == rid:
 			return r
 		else:
-			print(id_number, r.id_number)
+			print(rid, r.rid)
 	return None
 
 def get_key(password):
@@ -54,20 +54,20 @@ def research_creation_page():
 def create_research(name, password):
 	try:
 		database.append(Research(name, password))
-		return app.redirect(f"/research/{database[len(database) - 1].id_number}/overview/{get_key(database[len(database) - 1].password_hash)}")
+		return app.redirect(f"/research/{database[len(database) - 1].rid}/overview/{get_key(database[len(database) - 1].password_hash)}")
 	except Exception as e:
 		return str(e)
 
-@app.route("/research/<id_number>/overview/<key>")
-@app.route("/research/<id_number>/overview.html/<key>")
-def research_overview(id_number, key):
+@app.route("/research/<rid>/overview/<key>")
+@app.route("/research/<rid>/overview.html/<key>")
+def research_overview(rid, key):
 	try:
-		r = get_research_by_id(int(id_number))
+		r = get_research_by_id(int(rid))
 		if not r:
 			return "404 - research not found"
 		if get_key(r.password_hash) != key:
 			return "lol nice try"
-		return render_template("research-overview.html", research_id=r.id_number)
+		return render_template("research-overview.html", research_id=r.rid)
 	except Exception as e:
 		return str(e)
 
@@ -85,11 +85,11 @@ def research_login(rid, name, password):
 	except Exception as e:
 		return str(e)
 
-@app.route("/research/<id_number>/overview/<key>/get-stats")
-@app.route("/research/<id_number>/overview.html/<key>/get-stats")
-def get_stats(id_number, key):
+@app.route("/research/<rid>/overview/<key>/get-stats")
+@app.route("/research/<rid>/overview.html/<key>/get-stats")
+def get_stats(rid, key):
 	try:
-		r = get_research_by_id(int(id_number))
+		r = get_research_by_id(int(rid))
 		if not r:
 			return "404 - research not found"
 		if get_key(r.password_hash) != key:
@@ -107,6 +107,35 @@ def get_stats(id_number, key):
 def login():
 	return render_template("login.html")
 
+@app.route("/login-research/<name>/<password>/<rid>")
+def fetch_key(name, password, rid):
+	try:
+		r = get_research_by_id(int(rid))
+		if not r:
+			return "r"
+		if get_key(r.password_hash) != get_key(hash(password)):
+			return "p"
+		return get_key(r.password_hash)
+	except Exception as e:
+		return "e " + str(e)
+
+@app.route("/research/<rid>")
+@app.route("/research/<rid>/")
+@app.route("/research/<rid>/form")
+@app.route("/research/<rid>/form.html")
+def research_form(rid):
+	try:
+		r = get_research_by_id(int(rid))
+		if not r:
+			return "404 - research not found"
+		return render_template("form-temp.html", url_rid=rid)
+	except Exception as e:
+		return str(e)
+
+@app.route("/research/<rid>/send/<query>")
+def send_results(rid, query):
+	return "kthanksbye"
+
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.settimeout(0)
@@ -119,17 +148,6 @@ def get_ip():
         s.close()
     return IP
 
-@app.route("/login-research/<name>/<password>/<id_number>")
-def fetch_key(name, password, id_number):
-	try:
-		r = get_research_by_id(int(id_number))
-		if not r:
-			return "r"
-		if get_key(r.password_hash) != get_key(hash(password)):
-			return "p"
-		return get_key(r.password_hash)
-	except Exception as e:
-		return "e " + str(e)
-
 if __name__ == '__main__':
 	app.run(debug = True, host = get_ip())
+	database.append(Research('n', 'p'))
