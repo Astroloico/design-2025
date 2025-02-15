@@ -18,8 +18,6 @@ class Research():
 		self.name = name
 		self.password_hash = hash(password)
 		self.data = []
-	def check_login(self, name, password) -> bool:
-		return self.name == name and self.password_hash == hash(password)
 	def get_processed_data(self) -> list:
 		"""
 		returns a list of lenght 3 with :
@@ -53,7 +51,7 @@ def research_creation_page():
 	return render_template("research-creation.html")
 
 @app.route("/create-research/<name>/<password>")
-def create_page(name, password):
+def create_research(name, password):
 	try:
 		database.append(Research(name, password))
 		return app.redirect(f"/research/{database[len(database) - 1].id_number}/overview/{get_key(database[len(database) - 1].password_hash)}")
@@ -119,8 +117,10 @@ def get_ip():
         IP = '127.0.0.1'
     finally:
         s.close()
-    return IP@app.route("/login-research/<name>/<password>/<id_number>")
-def fetch_ketch(name, password, id_number):
+    return IP
+
+@app.route("/login-research/<name>/<password>/<id_number>")
+def fetch_key(name, password, id_number):
 	try:
 		r = get_research_by_id(int(id_number))
 		if not r:

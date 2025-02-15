@@ -14,7 +14,7 @@ function createResearch() {
 		document.getElementById("error-psw-div").innerHTML = "Les mots de passe ne sont pas les mêmes";
 		return "passwords not matching error";
 	}
-	location.replace("/create-research/" + nameField + "/" + psw + "")
+	window.location.replace("/create-research/" + nameField + "/" + psw + "")
 }
 
 async function loginResearch() {
@@ -48,7 +48,7 @@ async function loginResearch() {
 		console.log(key);
 		return "server-side error";
 	}
-	window.location.assign("/research/" + rid + "/overview/" + key)
+	window.location.replace("/research/" + rid + "/overview/" + key)
 }
 
 async function fetchKey(rid, name, password) {
