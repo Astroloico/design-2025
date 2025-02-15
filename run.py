@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 import statistics as stats
+import socket
 app = Flask(__name__)
 
 database = []
@@ -69,6 +70,20 @@ def research_overview(id_number, key):
 	except Exception as e:
 		return str(e)
 
+@app.route("/research/login/<rid>/<name>/<password>")
+@app.route("/research/login.html/<rid>/<name>/<password>")
+def research_login(rid, name, password):
+	try:
+		r = get_research_by_id(int(rid))
+		if not r:
+			return "404 - research not found"
+		key = hash(r.password_hash)
+		if hash(r.password_hash) != key:
+			return app.redirect("/research/login", error_pws_div_default = "incorrect, veuillez réessayer")
+		return app.redirect(f"/research/{rid}/overview/{str(key)}")
+	except Exception as e:
+		return str(e)
+
 @app.route("/research/<id_number>/overview/<key>/get-stats")
 @app.route("/research/<id_number>/overview.html/<key>/get-stats")
 def get_stats(id_number, key):
@@ -89,9 +104,19 @@ def get_stats(id_number, key):
 @app.route("/research/login")
 @app.route("/research/login.html")
 def login():
-	return render_template("login.html")
+	return render_template("login.html", error_pws_div_default = "")
 
-
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.settimeout(0)
+    try:
+        s.connect(('10.254.254.254', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
 
 if __name__ == '__main__':
-	app.run(debug = True)
+	app.run(debug = True, host = get_ip())

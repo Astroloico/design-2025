@@ -7,7 +7,7 @@ function createResearch() {
 	}
 	let psw = document.getElementById("psw1").value;
 	if (psw.length == 0) {
-		document.getElementById("error-psw-div").innerHTML = "Veuillex rentrer un mot de passe";
+		document.getElementById("error-psw-div").innerHTML = "Veuillex entrer un mot de passe";
 		return "password non-existence error";
 	}
 	if (document.getElementById("psw2").value != psw) {
@@ -15,6 +15,26 @@ function createResearch() {
 		return "passwords not matching error";
 	}
 	location.replace("/create-research/" + nameField + "/" + psw + "")
+}
+
+function login() {
+	document.getElementById("error-psw-div").innerHTML = "";
+	let nameField = document.getElementById("name").value;
+	if (nameField.length == 0) {
+		document.getElementById("error-psw-div").innerHTML = "Veuilez entrer un nom de recherche";
+		return "name non-existence error";
+	}
+	let psw = document.getElementById("psw").value;
+	if (psw.length == 0) {
+		document.getElementById("error-psw-div").innerHTML = "Veuillex entrer un mot de passe";
+		return "password non-existence error";
+	}
+	let rid = document.getElementById("rid").value;
+	if (psw.length == 0) {
+		document.getElementById("error-psw-div").innerHTML = "Veuillex entrer un identifiant";
+		return "rid non-existence error";
+	}
+	location.replace("/research/login/" + rid + "/" + nameField + "/" + psw + "")
 }
 
 function fetchStatsIntervall() {

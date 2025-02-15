@@ -1,3 +1,24 @@
+@media (max-width:961px)  { /* smartphones, iPhone, portrait 480x320 phones */
+    body {
+        font-size: 50px
+    }
+}
+@media (min-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */
+    body {
+        font-size: 25px
+    }
+}
+@media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */
+    body {
+        font-size: 15px
+    }
+}
+@media (min-width:1281px) { /* hi-res laptops and desktops */
+    body {
+        font-size: 20px
+    }
+}
+
 .center {
     margin-inline: auto;
     max-width: fit-content;
