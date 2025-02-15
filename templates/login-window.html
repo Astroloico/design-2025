@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>siCCest website ever</title>
+		<script type = "text/javascript" 
+		src = "{{ url_for('static', filename = 'script.js') }}" ></script>
+		<link rel="stylesheet" href="{{ url_for('static', filename = 'styles.css') }}">
+	</head>
+   
+	<body>
+		<div class="center small-field">
+			<p>Nom :</p>
+			<p><input type="text" id="name"></p>
+			<p>Mot de passe :</p>
+			<p><input type="text" id="psw"></p>
+			<p>Identifiant de recherche :</p>
+			<p><input type="text" id="rid"></p>
+			<p><button onclick="loginResearch()">Créer recherche</button></p>
+			<div style="color: red;" id="error-psw-div">{{ epd_deafault }}</div>
+		</div>
+	</body>
+</html>

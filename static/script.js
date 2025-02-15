@@ -17,7 +17,7 @@ function createResearch() {
 	location.replace("/create-research/" + nameField + "/" + psw + "")
 }
 
-function login() {
+async function loginResearch() {
 	document.getElementById("error-psw-div").innerHTML = "";
 	let nameField = document.getElementById("name").value;
 	if (nameField.length == 0) {
@@ -26,15 +26,34 @@ function login() {
 	}
 	let psw = document.getElementById("psw").value;
 	if (psw.length == 0) {
-		document.getElementById("error-psw-div").innerHTML = "Veuillex entrer un mot de passe";
+		document.getElementById("error-psw-div").innerHTML = "Veuillez entrer un mot de passe";
 		return "password non-existence error";
 	}
-	let rid = document.getElementById("rid").value;
-	if (psw.length == 0) {
-		document.getElementById("error-psw-div").innerHTML = "Veuillex entrer un identifiant";
-		return "rid non-existence error";
+	let rid = document.getElementById("rid").value
+	if (rid.length == 0) {
+		document.getElementById("error-psw-div").innerHTML = "Veuillez entrer un identifiant";
+		return "rid not matching error";
 	}
-	location.replace("/research/login/" + rid + "/" + nameField + "/" + psw + "")
+	key = await fetchKey(rid, nameField, psw);
+	if (key == "r") {
+		document.getElementById("error-psw-div").innerHTML = "Aucune recherche correspondante";
+		return "rid not matching db error";
+	}
+	if (key == "p") {
+		document.getElementById("error-psw-div").innerHTML = "Mauvais nom / mot de passe";
+		return "nive try error";
+	}
+	if (key[0] == "e") {
+		document.getElementById("error-psw-div").innerHTML = "Une erreure est survenue";
+		console.log(key);
+		return "server-side error";
+	}
+	window.location.assign("/research/" + rid + "/overview/" + key)
+}
+
+async function fetchKey(rid, name, password) {
+	let key = (await (await fetch("/login-research/" + name + "/" + password + "/" + rid)).text());
+	return key;
 }
 
 function fetchStatsIntervall() {

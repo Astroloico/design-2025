@@ -8,7 +8,10 @@
 	</head>
    
 	<body>
-		<p><a href="/research-creation.html">Créer une recherche</a></p>
-		<p><a href="/research/login">Accéder aux résultats de votre recherche</a></p>
+		<div class="center small-field">
+            <form action="/research/{{ rid }}/submit/">
+                <input id="test1", name="textinput1">
+            </form>
+        </div>
 	</body>
 </html>
