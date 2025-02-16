@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 import statistics as stats
 import socket
+from flask import request
 app = Flask(__name__)
 
 database = []
@@ -105,6 +106,8 @@ def get_stats(rid, key):
 @app.route("/research/login")
 @app.route("/research/login.html")
 def login():
+	print("form :")
+	print(request.form)
 	return render_template("login.html")
 
 @app.route("/login-research/<name>/<password>/<rid>")
@@ -119,22 +122,18 @@ def fetch_key(name, password, rid):
 	except Exception as e:
 		return "e " + str(e)
 
-@app.route("/research/<rid>")
-@app.route("/research/<rid>/")
-@app.route("/research/<rid>/form")
-@app.route("/research/<rid>/form.html")
+@app.route("/research/<rid>", methods=["GET", "POST"])
 def research_form(rid):
 	try:
+		if request.method == "POST":
+			print(request.form.get("textinput1"))
+			return "kthanksbye"
 		r = get_research_by_id(int(rid))
 		if not r:
 			return "404 - research not found"
 		return render_template("form-temp.html", url_rid=rid)
 	except Exception as e:
 		return str(e)
-
-@app.route("/research/<rid>/send/<query>")
-def send_results(rid, query):
-	return "kthanksbye"
 
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -149,5 +148,5 @@ def get_ip():
     return IP
 
 if __name__ == '__main__':
-	app.run(debug = True, host = get_ip())
 	database.append(Research('n', 'p'))
+	app.run(debug = True, host = get_ip())
