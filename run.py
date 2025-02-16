@@ -127,7 +127,7 @@ def research_form(rid):
 	try:
 		if request.method == "POST":
 			print(request.form.get("textinput1"))
-			return "kthanksbye"
+			return app.redirect("/")
 		r = get_research_by_id(int(rid))
 		if not r:
 			return "404 - research not found"

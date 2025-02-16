@@ -65,3 +65,29 @@ async function fetchStats() {
 	let data = (await (await fetch(window.location + "/get-stats")).text()).toString();
 	document.getElementById("statistics").innerHTML = data;
 }
+
+function startTimer() {
+	document.getElementById("start-button").style.display = "none";
+	document.getElementById("list").style.display = "inline";
+	window.setTimeout(questionTime, 20 * 1000);
+	startStopwatch();
+}
+
+function startStopwatch() {
+	let c = document.getElementById("stopwatch");
+	let ctx = c.getContext("2d");
+	let startTime = Date.now();
+	setInterval(function() {
+		let width = c.width;
+		ctx.clearRect(0, 0, width, width);
+		ctx.fillColor = "#0000ff";
+		let x = Math.sin((Date.now() - startTime) / 1000) * 0.75 / 2 + 0.5;
+		let y = Math.cos((Date.now() - startTime) / 1000) * 0.75 / 2 + 0.5;
+		ctx.fillRect(x * width - 5, -y * width - 5, 10, 10);
+	}, 10);
+}
+
+function questionTime() {
+	document.getElementById("list").style.display = "none";
+	document.getElementById("form").style.display = "inline";
+}
