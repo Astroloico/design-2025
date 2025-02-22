@@ -4,6 +4,18 @@
 		<title>siCCest website ever</title>
 		<script type = "text/javascript" 
 		src = "{{ url_for('static', filename = 'script.js') }}" ></script>
+		<script language="JavaScript">
+			function checkTextareaLineCount() {
+				let textarea = document.getElementById("anwser");
+				let numOfLines = textarea.value.split("\n").length;
+				console.info([textarea.value.split("\n").length, textarea.value]);
+				if (numOfLines > 50) {
+					while (textarea.value.split("\n").length > 50) {
+						textarea.value = textarea.value.substring(0, textarea.value.length - 1);
+					}
+				}
+			}
+		</script>
 		<link rel="stylesheet" href="{{ url_for('static', filename = 'styles.css') }}">
 	</head>
    
@@ -69,13 +81,13 @@
 				<div class="list-element"><p>element 50</p></div>
 			</div>
 			<div>
-				<canvas id="stopwatch"></canvas>
+				<canvas id="stopwatch", width="512", height="512"></canvas>
 			</div>
 		</div>
 		<div id="form" class="center" style="display: none;">
-            <form method="post">
-                <input id="test1" name="textinput1">
-				<input id="submitbutton" type="submit" value="hey">
+            <form method="post" class="main-form">
+                <p><textarea id="anwser" name="anwser" required placeholder="Veuillez entrer tous les éléments dont vous vous rappelez (1 par ligne)" rows="50" onkeyup="checkTextareaLineCount()"></textarea></p>
+				<p><input id="submitbutton" type="submit" value="Envoyer"></p>
             </form>
         </div>
 	</body>

@@ -77,14 +77,47 @@ function startStopwatch() {
 	let c = document.getElementById("stopwatch");
 	let ctx = c.getContext("2d");
 	let startTime = Date.now();
+	ctx.lineWidth = 12;
+	ctx.strokeStyle = "#000000";
+	ctx.beginPath();
+	ctx.arc(256, 256, 128, 0, 2 * Math.PI);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.arc(256, 256, 240, 0, 2 * Math.PI);
+	ctx.stroke();
+	ctx.lineWidth = 8;
 	setInterval(function() {
-		let width = c.width;
-		ctx.clearRect(0, 0, width, width);
-		ctx.fillColor = "#0000ff";
-		let x = Math.sin((Date.now() - startTime) / 1000) * 0.75 / 2 + 0.5;
-		let y = Math.cos((Date.now() - startTime) / 1000) * 0.75 / 2 + 0.5;
-		ctx.fillRect(x * width - 5, -y * width - 5, 10, 10);
-	}, 10);
+		ctx.fillStyle = "#008800";
+		ctx.strokeStyle = ctx.fillStyle;
+		ctx.beginPath();
+		ctx.arc(
+			256 + Math.sin((Date.now() - startTime - 40) / 20000 * Math.PI * 2) * 184,
+			256 - Math.cos((Date.now() - startTime - 40) / 20000 * Math.PI * 2) * 184,
+			35, 0, 2 * Math.PI
+		);
+		ctx.fill();
+		ctx.stroke();
+		ctx.fillStyle = "#888888";
+		ctx.strokeStyle = "#000000";
+		ctx.beginPath();
+		ctx.arc(
+			256 + Math.sin((Date.now() - startTime) / 20000 * Math.PI * 2) * 184,
+			256 - Math.cos((Date.now() - startTime) / 20000 * Math.PI * 2) * 184,
+			32, 0, 2 * Math.PI
+		);
+		ctx.fill();
+		ctx.stroke();
+		ctx.font = "128px Arial";
+		ctx.clearRect(184, 310, 156, -128);
+		if (Date.now() - startTime < 19000) {
+			ctx.fillText((20000 - (Date.now() - startTime)).toString().slice(0, 2), 184, 300);
+		} else {
+			ctx.fillText("0".concat((20000 - (Date.now() - startTime)).toString().slice(0, 1)), 184, 300);
+		}
+		if (Date.now() - startTime > 10000) {
+			ctx.fillRect(250, 290, 10, 10);
+		}
+	}, Math.floor(1000 / 30));
 }
 
 function questionTime() {

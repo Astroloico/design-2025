@@ -65,3 +65,25 @@ svg {
     margin: 0 auto;
     display: grid;
 }
+textarea {
+    font-size: 30px;
+    font-family: sans-serif;
+    text-align: center;;
+    font: bold;
+    width: 90%;
+    max-height: 80vh;
+    resize: none;
+}
+#submitbutton {
+    font-size: 30px;
+    font-family: sans-serif;
+    text-align: center;;
+    font: bold;
+    width: 90%;
+}
+.main-form {
+    font-size: 30px;
+    font-family: sans-serif;
+    text-align: center;;
+    font: bold;
+}

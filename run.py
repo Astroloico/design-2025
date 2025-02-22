@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
 import statistics as stats
 import socket
 from flask import request
@@ -126,7 +126,7 @@ def fetch_key(name, password, rid):
 def research_form(rid):
 	try:
 		if request.method == "POST":
-			print(request.form.get("textinput1"))
+			print(request.form.get("anwser"))
 			return app.redirect("/")
 		r = get_research_by_id(int(rid))
 		if not r:
@@ -134,6 +134,10 @@ def research_form(rid):
 		return render_template("form-temp.html", url_rid=rid)
 	except Exception as e:
 		return str(e)
+
+@app.route("/favicon.ico")
+def logo():
+	return send_from_directory("static/", "logo.ico")
 
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
