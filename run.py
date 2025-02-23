@@ -2,11 +2,65 @@ from flask import Flask, render_template, send_from_directory
 import statistics as stats
 import socket
 from flask import request
+from difflib import get_close_matches
 app = Flask(__name__)
 
 database = []
-id_counter = 0
 
+counties = [
+	"alameda",
+	"alpine",
+	"amador",
+	"butte",
+	"calaveras",
+	"colusa",
+	"contra Costa",
+	"del Norte",
+	"el Dorado",
+	"fresno",
+	"glenn",
+	"humboldt",
+	"imperial",
+	"inyo",
+	"kern",
+	"kings",
+	"lake",
+	"lassen",
+	"los Angeles",
+	"madera",
+	"marin",
+	"mariposa",
+	"mendocino",
+	"merced",
+	"modoc",
+	"mono",
+	"monterey",
+	"napa",
+	"nevada",
+	"orange",
+	"placer",
+	"plumas",
+	"riverside",
+	"sacramento",
+	"san Benito",
+	"san Bernardino",
+	"san Diego",
+	"san Francisco",
+	"san Joaquin",
+	"san Luis Obispo",
+	"san Mateo",
+	"santa Barbara",
+	"santa Clara",
+	"santa Cruz",
+	"shasta",
+	"sierra",
+	"siskiyou",
+	"solano",
+	"sonoma",
+	"stanislaus"
+]
+
+id_counter = 0
 class Research():
 	rid: int
 	name: str
@@ -28,6 +82,24 @@ class Research():
 		"""
 		data = self.data if self.data else [0]
 		return [data, stats.fmean(data), stats.median(data)]
+
+class Result():
+	raw: str
+	parsed: list[str]
+	score: float
+	media: str
+	def __init__(self, anwser: str, media: str):
+		print(media)
+		self.raw = anwser
+		self.parsed = anwser.lower().replace(" ", "").replace("\r", "").split("\n")
+		counties_copy = counties.copy()
+		self.media = media
+		self.score = 0
+		for item in self.parsed:
+			if get_close_matches(item, counties_copy, 1, 0.9) != []:
+				counties_copy.remove(get_close_matches(item, counties_copy, 1, 0.9)[0])
+				self.score += 1
+
 
 def get_research_by_id(rid):
 	for r in database:
@@ -125,12 +197,12 @@ def fetch_key(name, password, rid):
 @app.route("/research/<rid>", methods=["GET", "POST"])
 def research_form(rid):
 	try:
-		if request.method == "POST":
-			print(request.form.get("anwser"))
-			return app.redirect("/")
 		r = get_research_by_id(int(rid))
 		if not r:
 			return "404 - research not found"
+		if request.method == "POST":
+			r.data.append(Result(request.form.get("anwser"), request.form.get("devtype")))
+			return app.redirect("/")
 		return render_template("form-temp.html", url_rid=rid)
 	except Exception as e:
 		return str(e)

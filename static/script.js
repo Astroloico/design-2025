@@ -123,4 +123,25 @@ function startStopwatch() {
 function questionTime() {
 	document.getElementById("list").style.display = "none";
 	document.getElementById("form").style.display = "inline";
+	devTypeCheck()
+}
+
+function checkTextareaLineCount() {
+	let textarea = document.getElementById("anwser");
+	let numOfLines = textarea.value.split("\n").length;
+	console.info([textarea.value.split("\n").length, textarea.value]);
+	if (numOfLines > 50) {
+		while (textarea.value.split("\n").length > 50) {
+			textarea.value = textarea.value.substring(0, textarea.value.length - 1);
+		}
+	}
+}
+
+function devTypeCheck() {
+	let output = document.getElementById("devtype");
+	if (navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)) {
+		output.value = "mobile";
+	} else {
+		output.value = "desktop";
+	}
 }

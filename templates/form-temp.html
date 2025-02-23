@@ -4,18 +4,6 @@
 		<title>siCCest website ever</title>
 		<script type = "text/javascript" 
 		src = "{{ url_for('static', filename = 'script.js') }}" ></script>
-		<script language="JavaScript">
-			function checkTextareaLineCount() {
-				let textarea = document.getElementById("anwser");
-				let numOfLines = textarea.value.split("\n").length;
-				console.info([textarea.value.split("\n").length, textarea.value]);
-				if (numOfLines > 50) {
-					while (textarea.value.split("\n").length > 50) {
-						textarea.value = textarea.value.substring(0, textarea.value.length - 1);
-					}
-				}
-			}
-		</script>
 		<link rel="stylesheet" href="{{ url_for('static', filename = 'styles.css') }}">
 	</head>
    
@@ -29,56 +17,56 @@
 		</div>
 		<div id="list" style="display: none;">
 			<div class="list-text">
-				<div class="list-element"><p>element 1</p></div>
-				<div class="list-element"><p>element 2</p></div>
-				<div class="list-element"><p>element 3</p></div>
-				<div class="list-element"><p>element 4</p></div>
-				<div class="list-element"><p>element 5</p></div>
-				<div class="list-element"><p>element 6</p></div>
-				<div class="list-element"><p>element 7</p></div>
-				<div class="list-element"><p>element 8</p></div>
-				<div class="list-element"><p>element 9</p></div>
-				<div class="list-element"><p>element 10</p></div>
-				<div class="list-element"><p>element 11</p></div>
-				<div class="list-element"><p>element 12</p></div>
-				<div class="list-element"><p>element 13</p></div>
-				<div class="list-element"><p>element 14</p></div>
-				<div class="list-element"><p>element 15</p></div>
-				<div class="list-element"><p>element 16</p></div>
-				<div class="list-element"><p>element 17</p></div>
-				<div class="list-element"><p>element 18</p></div>
-				<div class="list-element"><p>element 19</p></div>
-				<div class="list-element"><p>element 20</p></div>
-				<div class="list-element"><p>element 21</p></div>
-				<div class="list-element"><p>element 22</p></div>
-				<div class="list-element"><p>element 23</p></div>
-				<div class="list-element"><p>element 24</p></div>
-				<div class="list-element"><p>element 25</p></div>
-				<div class="list-element"><p>element 26</p></div>
-				<div class="list-element"><p>element 27</p></div>
-				<div class="list-element"><p>element 28</p></div>
-				<div class="list-element"><p>element 29</p></div>
-				<div class="list-element"><p>element 30</p></div>
-				<div class="list-element"><p>element 31</p></div>
-				<div class="list-element"><p>element 32</p></div>
-				<div class="list-element"><p>element 33</p></div>
-				<div class="list-element"><p>element 34</p></div>
-				<div class="list-element"><p>element 35</p></div>
-				<div class="list-element"><p>element 36</p></div>
-				<div class="list-element"><p>element 37</p></div>
-				<div class="list-element"><p>element 38</p></div>
-				<div class="list-element"><p>element 39</p></div>
-				<div class="list-element"><p>element 40</p></div>
-				<div class="list-element"><p>element 41</p></div>
-				<div class="list-element"><p>element 42</p></div>
-				<div class="list-element"><p>element 43</p></div>
-				<div class="list-element"><p>element 44</p></div>
-				<div class="list-element"><p>element 45</p></div>
-				<div class="list-element"><p>element 46</p></div>
-				<div class="list-element"><p>element 47</p></div>
-				<div class="list-element"><p>element 48</p></div>
-				<div class="list-element"><p>element 49</p></div>
-				<div class="list-element"><p>element 50</p></div>
+				<div class="list-element"><p>Alameda</p></div>
+				<div class="list-element"><p>Alpine</p></div>
+				<div class="list-element"><p>Amador</p></div>
+				<div class="list-element"><p>Butte</p></div>
+				<div class="list-element"><p>Calaveras</p></div>
+				<div class="list-element"><p>Colusa</p></div>
+				<div class="list-element"><p>Contra Costa</p></div>
+				<div class="list-element"><p>Del Norte</p></div>
+				<div class="list-element"><p>El Dorado</p></div>
+				<div class="list-element"><p>Fresno</p></div>
+				<div class="list-element"><p>Glenn</p></div>
+				<div class="list-element"><p>Humboldt</p></div>
+				<div class="list-element"><p>Imperial</p></div>
+				<div class="list-element"><p>Inyo</p></div>
+				<div class="list-element"><p>Kern</p></div>
+				<div class="list-element"><p>Kings</p></div>
+				<div class="list-element"><p>Lake</p></div>
+				<div class="list-element"><p>Lassen</p></div>
+				<div class="list-element"><p>Los Angeles</p></div>
+				<div class="list-element"><p>Madera</p></div>
+				<div class="list-element"><p>Marin</p></div>
+				<div class="list-element"><p>Mariposa</p></div>
+				<div class="list-element"><p>Mendocino</p></div>
+				<div class="list-element"><p>Merced</p></div>
+				<div class="list-element"><p>Modoc</p></div>
+				<div class="list-element"><p>Mono</p></div>
+				<div class="list-element"><p>Monterey</p></div>
+				<div class="list-element"><p>Napa</p></div>
+				<div class="list-element"><p>Nevada</p></div>
+				<div class="list-element"><p>Orange</p></div>
+				<div class="list-element"><p>Placer</p></div>
+				<div class="list-element"><p>Plumas</p></div>
+				<div class="list-element"><p>Riverside</p></div>
+				<div class="list-element"><p>Sacramento</p></div>
+				<div class="list-element"><p>San Benito</p></div>
+				<div class="list-element"><p>San Bernardino</p></div>
+				<div class="list-element"><p>San Diego</p></div>
+				<div class="list-element"><p>San Francisco</p></div>
+				<div class="list-element"><p>San Joaquin</p></div>
+				<div class="list-element"><p>San Luis Obispo</p></div>
+				<div class="list-element"><p>San Mateo</p></div>
+				<div class="list-element"><p>Santa Barbara</p></div>
+				<div class="list-element"><p>Santa Clara</p></div>
+				<div class="list-element"><p>Santa Cruz</p></div>
+				<div class="list-element"><p>Shasta</p></div>
+				<div class="list-element"><p>Sierra</p></div>
+				<div class="list-element"><p>Siskiyou</p></div>
+				<div class="list-element"><p>Solano</p></div>
+				<div class="list-element"><p>Sonoma</p></div>
+				<div class="list-element"><p>Stanislaus</p></div>
 			</div>
 			<div>
 				<canvas id="stopwatch", width="512", height="512"></canvas>
@@ -88,6 +76,7 @@
             <form method="post" class="main-form">
                 <p><textarea id="anwser" name="anwser" required placeholder="Veuillez entrer tous les éléments dont vous vous rappelez (1 par ligne)" rows="50" onkeyup="checkTextareaLineCount()"></textarea></p>
 				<p><input id="submitbutton" type="submit" value="Envoyer"></p>
+				<input id="devtype" name="devtype" type="text" style="visibility: hidden; position: absolute;">
             </form>
         </div>
 	</body>

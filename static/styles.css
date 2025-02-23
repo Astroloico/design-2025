@@ -49,8 +49,8 @@ svg {
     display: grid;
     float: left;
     overflow: scroll;
-    height: calc(100vh - 50px);
-    width: calc(70vw - 40px);
+    width: calc(75vw - 60px);
+    height: calc(100vh - 60px);
     gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
