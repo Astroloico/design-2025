@@ -87,3 +87,17 @@ textarea {
     text-align: center;;
     font: bold;
 }
+.stat-field {
+    text-align: left;
+    padding: 3rem;
+    padding-top: 1rem;
+    border-width: 10px;
+    border-radius: 20px;
+    border-color: black;
+    border-style: solid;
+}
+.general-stat {
+    float: left;
+    width: calc(70vw - 60px);
+    height: calc(75vh - 60px);
+}

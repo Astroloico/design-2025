@@ -5,10 +5,77 @@
 		<script type = "text/javascript" 
 		src = "{{ url_for('static', filename = 'script.js') }}" ></script>
 		<link rel="stylesheet" href="{{ url_for('static', filename = 'styles.css') }}">
+		<script
+			type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"
+		></script>
 	</head>
    
 	<body onload="fetchStatsIntervall()">
 		<p>Identifiant : {{ research_id }}</p>
-		<div id="statistics"></div>
+		<table id="General" class="stat-field">
+			<tr><td colspan="2"><p>Général</p></td></tr>
+			<tr>
+				<td style="width: 50%;">
+					Ordinateur :<br>
+					x̄ = <div id="deskAvr" style="display: inline;"></div><br>
+					x͂ = <div id="deskMed" style="display: inline;"></div>
+				</td>
+				<td>
+					Mobile :<br>
+					x̄ = <div id="moblAvr" style="display: inline;"></div><br>
+					x͂ = <div id="moblMed" style="display: inline;"></div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="width: 100%;">
+					<canvas id="maingraph" style="width:100%; height: 30%;"></canvas>
+				</td>
+				<script id="graphscript">
+					let mainchart = new Chart("maingraph", {
+						type: "line",
+						data: {
+							labels: [0],
+							datasets: [{
+								data: [0],
+								borderColor: "red",
+								fill: false
+							},{
+								data: [0],
+								borderColor: "green",
+								fill: false
+							},{
+								data: [0],
+								borderColor: "black",
+								fill: false
+							},{
+								data: [0],
+								borderColor: "blue",
+								fill: false
+							}]
+						},
+						options: {
+							legend: {display: false}
+						}
+					});
+					let timeCouter = 0;
+					window.setInterval(function() {
+						if (
+							mainchart.data.datasets[0].data.findLast(function(){return true}) != Number(document.getElementById("deskAvr").innerHTML) ||
+							mainchart.data.datasets[1].data.findLast(function(){return true}) != Number(document.getElementById("deskMed").innerHTML) ||
+							mainchart.data.datasets[2].data.findLast(function(){return true}) != Number(document.getElementById("moblAvr").innerHTML) ||
+							mainchart.data.datasets[3].data.findLast(function(){return true}) != Number(document.getElementById("moblMed").innerHTML)
+						) {
+							timeCouter++;
+							mainchart.data.labels.push(timeCouter);
+							mainchart.data.datasets[0].data.push(Number(document.getElementById("deskAvr").innerHTML));
+							mainchart.data.datasets[1].data.push(Number(document.getElementById("deskMed").innerHTML));
+							mainchart.data.datasets[2].data.push(Number(document.getElementById("moblAvr").innerHTML));
+							mainchart.data.datasets[3].data.push(Number(document.getElementById("moblMed").innerHTML));
+							mainchart.update();
+						}
+					}, 500);
+				</script>
+			</tr>
+		</table>
 	</body>
 </html>

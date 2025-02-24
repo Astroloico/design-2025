@@ -62,8 +62,16 @@ function fetchStatsIntervall() {
 }
 
 async function fetchStats() {
-	let data = (await (await fetch(window.location + "/get-stats")).text()).toString();
-	document.getElementById("statistics").innerHTML = data;
+	let deskAvr = document.getElementById("deskAvr");
+	let deskMed = document.getElementById("deskMed");
+	let moblAvr = document.getElementById("moblAvr");
+	let moblMed = document.getElementById("moblMed");
+	let response = await fetch(window.location + "/get-stats");
+	let data = await response.json();
+	deskMed.innerHTML = data.desktop_median;
+	deskAvr.innerHTML = data.desktop_average;
+	moblAvr.innerHTML = data.mobile_average;
+	moblMed.innerHTML = data.mobile_median;
 }
 
 function startTimer() {
@@ -86,7 +94,7 @@ function startStopwatch() {
 	ctx.arc(256, 256, 240, 0, 2 * Math.PI);
 	ctx.stroke();
 	ctx.lineWidth = 8;
-	setInterval(function() {
+	window.setInterval(function() {
 		ctx.fillStyle = "#008800";
 		ctx.strokeStyle = ctx.fillStyle;
 		ctx.beginPath();

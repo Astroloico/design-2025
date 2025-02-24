@@ -60,29 +60,6 @@ counties = [
 	"stanislaus"
 ]
 
-id_counter = 0
-class Research():
-	rid: int
-	name: str
-	password_hash: int
-	data: list
-	def __init__(self, name: str, password: str) -> None:
-		global id_counter
-		self.rid = id_counter
-		id_counter += 1
-		self.name = name
-		self.password_hash = hash(password)
-		self.data = []
-	def get_processed_data(self) -> list:
-		"""
-		returns a list of lenght 3 with :
-		index 0 : data as list[int]
-		index 1 : list average as float
-		index 2 : list median as float
-		"""
-		data = self.data if self.data else [0]
-		return [data, stats.fmean(data), stats.median(data)]
-
 class Result():
 	raw: str
 	parsed: list[str]
@@ -100,17 +77,39 @@ class Result():
 				counties_copy.remove(get_close_matches(item, counties_copy, 1, 0.9)[0])
 				self.score += 1
 
+id_counter = 0
+class Research():
+	rid: int
+	name: str
+	password_hash: int
+	key: str
+	data: list[Result]
+	def __init__(self, name: str, password: str) -> None:
+		global id_counter
+		self.rid = id_counter
+		id_counter += 1
+		self.name = name
+		self.password_hash = hash(password)
+		self.key = get_key(self.password_hash)
+		self.data = []
+	def get_processed_data(self) -> dict:
+		desktop_scores = list(map(lambda x: x.score, filter(lambda x: x.media == "desktop", self.data)))
+		mobile_scores = list(map(lambda x: x.score, filter(lambda x: x.media == "mobile", self.data)))
+		return {
+			"desktop_average": stats.fmean(desktop_scores if desktop_scores else [0]),
+			"desktop_median": stats.median(desktop_scores if desktop_scores else [0]),
+			"mobile_average": stats.fmean(mobile_scores if mobile_scores else [0]),
+			"mobile_median": stats.median(mobile_scores if mobile_scores else [0])
+		}
 
 def get_research_by_id(rid):
 	for r in database:
 		if r.rid == rid:
 			return r
-		else:
-			print(rid, r.rid)
 	return None
 
 def get_key(password):
-	return str(hash(password))
+	return str(hash(str(password))).removeprefix("-")
 
 @app.route("/")
 @app.route("/index")
@@ -127,7 +126,7 @@ def research_creation_page():
 def create_research(name, password):
 	try:
 		database.append(Research(name, password))
-		return app.redirect(f"/research/{database[len(database) - 1].rid}/overview/{get_key(database[len(database) - 1].password_hash)}")
+		return app.redirect(f"/research/{database[len(database) - 1].rid}/overview/{get_key(hash(password))}")
 	except Exception as e:
 		return str(e)
 
@@ -138,7 +137,7 @@ def research_overview(rid, key):
 		r = get_research_by_id(int(rid))
 		if not r:
 			return "404 - research not found"
-		if get_key(r.password_hash) != key:
+		if r.key != key:
 			return "lol nice try"
 		return render_template("research-overview.html", research_id=r.rid)
 	except Exception as e:
@@ -150,11 +149,10 @@ def research_login(rid, name, password):
 	try:
 		r = get_research_by_id(int(rid))
 		if not r:
-			return "404 - research not found"
-		key = hash(r.password_hash)
-		if hash(r.password_hash) != key:
 			return app.redirect("/research/login", error_pws_div_default = "incorrect, veuillez réessayer")
-		return app.redirect(f"/research/{rid}/overview/{str(key)}")
+		if r.key != get_key(hash(password)):
+			return app.redirect("/research/login", error_pws_div_default = "incorrect, veuillez réessayer")
+		return app.redirect(f"/research/{rid}/overview/{r.key}")
 	except Exception as e:
 		return str(e)
 
@@ -165,21 +163,16 @@ def get_stats(rid, key):
 		r = get_research_by_id(int(rid))
 		if not r:
 			return "404 - research not found"
-		if get_key(r.password_hash) != key:
+		if r.key != key:
 			return "lol nice try"
-		processed = r.get_processed_data()
-		return render_template("stats.html",
-			average=str(processed[1]),
-			median=str(processed[2]),
-			data=str(processed[0]))
+		return r.get_processed_data()
 	except Exception as e:
+		print(str(e))
 		return str(e)
 
 @app.route("/research/login")
 @app.route("/research/login.html")
 def login():
-	print("form :")
-	print(request.form)
 	return render_template("login.html")
 
 @app.route("/login-research/<name>/<password>/<rid>")
@@ -188,7 +181,7 @@ def fetch_key(name, password, rid):
 		r = get_research_by_id(int(rid))
 		if not r:
 			return "r"
-		if get_key(r.password_hash) != get_key(hash(password)):
+		if r.key != get_key(hash(password)):
 			return "p"
 		return get_key(r.password_hash)
 	except Exception as e:
