@@ -3,6 +3,7 @@ import statistics as stats
 import socket
 from flask import request
 from difflib import get_close_matches
+import time
 app = Flask(__name__)
 
 database = []
@@ -65,6 +66,7 @@ class Result():
 	parsed: list[str]
 	score: float
 	media: str
+	date: float
 	def __init__(self, anwser: str, media: str):
 		print(media)
 		self.raw = anwser
@@ -72,6 +74,7 @@ class Result():
 		counties_copy = counties.copy()
 		self.media = media
 		self.score = 0
+		self.date = time.time()
 		for item in self.parsed:
 			if get_close_matches(item, counties_copy, 1, 0.9) != []:
 				counties_copy.remove(get_close_matches(item, counties_copy, 1, 0.9)[0])
@@ -92,6 +95,26 @@ class Research():
 		self.password_hash = hash(password)
 		self.key = get_key(self.password_hash)
 		self.data = []
+	def get_graph_y(self, stat_type, media) -> list[float]:
+		"""stat_type == True || 1 => average
+		stat_type == False || 0 => median"""
+		try:
+			timeline = [i[0] for i in sorted(zip([[j.score, j.media] for j in self.data], [j.date for j in self.data]))]
+			print(timeline)
+			incremental_list = []
+			ouput = []
+			for i in timeline:
+				if i[1] == media:
+					incremental_list.append(i[0])
+				if stat_type:
+					ouput.append(stats.fmean(incremental_list if incremental_list else [0]))
+				else:
+					ouput.append(stats.median(incremental_list if incremental_list else [0]))
+			print(incremental_list)
+			return ouput if ouput else [0]
+		except Exception as e:
+			print(str(e))
+			return [0]
 	def get_processed_data(self) -> dict:
 		desktop_scores = list(map(lambda x: x.score, filter(lambda x: x.media == "desktop", self.data)))
 		mobile_scores = list(map(lambda x: x.score, filter(lambda x: x.media == "mobile", self.data)))
@@ -99,7 +122,12 @@ class Research():
 			"desktop_average": stats.fmean(desktop_scores if desktop_scores else [0]),
 			"desktop_median": stats.median(desktop_scores if desktop_scores else [0]),
 			"mobile_average": stats.fmean(mobile_scores if mobile_scores else [0]),
-			"mobile_median": stats.median(mobile_scores if mobile_scores else [0])
+			"mobile_median": stats.median(mobile_scores if mobile_scores else [0]),
+			"chart_x": [i for i in range(len(desktop_scores) + len(mobile_scores))],
+			"chart_y_0": self.get_graph_y(1, "desktop"),
+			"chart_y_1": self.get_graph_y(0, "desktop"),
+			"chart_y_2": self.get_graph_y(1, "mobile"),
+			"chart_y_3": self.get_graph_y(0, "mobile")
 		}
 
 def get_research_by_id(rid):
@@ -165,6 +193,7 @@ def get_stats(rid, key):
 			return "404 - research not found"
 		if r.key != key:
 			return "lol nice try"
+		print(r.get_processed_data())
 		return r.get_processed_data()
 	except Exception as e:
 		print(str(e))

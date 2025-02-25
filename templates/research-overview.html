@@ -30,6 +30,13 @@
 				<td colspan="2" style="width: 100%;">
 					<canvas id="maingraph" style="width:100%; height: 30%;"></canvas>
 				</td>
+				<div style="visibility: hidden;">
+					<div id="chartdatax"></div>
+					<div id="chartdata0"></div>
+					<div id="chartdata1"></div>
+					<div id="chartdata2"></div>
+					<div id="chartdata3"></div>
+				</div>
 				<script id="graphscript">
 					let mainchart = new Chart("maingraph", {
 						type: "line",
@@ -59,20 +66,12 @@
 					});
 					let timeCouter = 0;
 					window.setInterval(function() {
-						if (
-							mainchart.data.datasets[0].data.findLast(function(){return true}) != Number(document.getElementById("deskAvr").innerHTML) ||
-							mainchart.data.datasets[1].data.findLast(function(){return true}) != Number(document.getElementById("deskMed").innerHTML) ||
-							mainchart.data.datasets[2].data.findLast(function(){return true}) != Number(document.getElementById("moblAvr").innerHTML) ||
-							mainchart.data.datasets[3].data.findLast(function(){return true}) != Number(document.getElementById("moblMed").innerHTML)
-						) {
-							timeCouter++;
-							mainchart.data.labels.push(timeCouter);
-							mainchart.data.datasets[0].data.push(Number(document.getElementById("deskAvr").innerHTML));
-							mainchart.data.datasets[1].data.push(Number(document.getElementById("deskMed").innerHTML));
-							mainchart.data.datasets[2].data.push(Number(document.getElementById("moblAvr").innerHTML));
-							mainchart.data.datasets[3].data.push(Number(document.getElementById("moblMed").innerHTML));
-							mainchart.update();
-						}
+						mainchart.data.labels = JSON.parse("[" + document.getElementById("chartdatax").innerHTML + "]");
+						mainchart.data.datasets[0].data = JSON.parse("[" + document.getElementById("chartdata0").innerHTML + "]");
+						mainchart.data.datasets[1].data = JSON.parse("[" + document.getElementById("chartdata1").innerHTML + "]");
+						mainchart.data.datasets[2].data = JSON.parse("[" + document.getElementById("chartdata2").innerHTML + "]");
+						mainchart.data.datasets[3].data = JSON.parse("[" + document.getElementById("chartdata3").innerHTML + "]");
+						mainchart.update();
 					}, 500);
 				</script>
 			</tr>

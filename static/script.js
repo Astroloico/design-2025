@@ -66,12 +66,24 @@ async function fetchStats() {
 	let deskMed = document.getElementById("deskMed");
 	let moblAvr = document.getElementById("moblAvr");
 	let moblMed = document.getElementById("moblMed");
+	let chartdatadivs = [
+		document.getElementById("chartdata0"),
+		document.getElementById("chartdata1"),
+		document.getElementById("chartdata2"),
+		document.getElementById("chartdata3"),
+		document.getElementById("chartdatax")
+	];
 	let response = await fetch(window.location + "/get-stats");
 	let data = await response.json();
 	deskMed.innerHTML = data.desktop_median;
 	deskAvr.innerHTML = data.desktop_average;
 	moblAvr.innerHTML = data.mobile_average;
 	moblMed.innerHTML = data.mobile_median;
+	chartdatadivs[0].innerHTML = data.chart_y_0;
+	chartdatadivs[1].innerHTML = data.chart_y_1;
+	chartdatadivs[2].innerHTML = data.chart_y_2;
+	chartdatadivs[3].innerHTML = data.chart_y_3;
+	chartdatadivs[4].innerHTML = data.chart_x;
 }
 
 function startTimer() {
