@@ -96,8 +96,10 @@ textarea {
     border-color: black;
     border-style: solid;
 }
-.general-stat {
-    float: left;
-    width: calc(70vw - 60px);
-    height: calc(75vh - 60px);
+.general-stats {
+    width:70%;
+}
+.qdcharts-overrides {
+    padding: 2rem;
+    padding-top: 2rem;
 }

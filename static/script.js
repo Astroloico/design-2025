@@ -32,7 +32,7 @@ async function loginResearch() {
 	let rid = document.getElementById("rid").value
 	if (rid.length == 0) {
 		document.getElementById("error-psw-div").innerHTML = "Veuillez entrer un identifiant";
-		return "rid not matching error";
+		return "rid non-existance error";
 	}
 	key = await fetchKey(rid, nameField, psw);
 	if (key == "r") {
@@ -41,7 +41,7 @@ async function loginResearch() {
 	}
 	if (key == "p") {
 		document.getElementById("error-psw-div").innerHTML = "Mauvais nom / mot de passe";
-		return "nive try error";
+		return "nice try error";
 	}
 	if (key[0] == "e") {
 		document.getElementById("error-psw-div").innerHTML = "Une erreure est survenue";
@@ -71,7 +71,9 @@ async function fetchStats() {
 		document.getElementById("chartdata1"),
 		document.getElementById("chartdata2"),
 		document.getElementById("chartdata3"),
-		document.getElementById("chartdatax")
+		document.getElementById("chartdatax"),
+		document.getElementById("deskquarts"),
+		document.getElementById("moblquarts")
 	];
 	let response = await fetch(window.location + "/get-stats");
 	let data = await response.json();
@@ -84,16 +86,14 @@ async function fetchStats() {
 	chartdatadivs[2].innerHTML = data.chart_y_2;
 	chartdatadivs[3].innerHTML = data.chart_y_3;
 	chartdatadivs[4].innerHTML = data.chart_x;
+	chartdatadivs[5].innerHTML = data.desktop_quartiles;
+	chartdatadivs[6].innerHTML = data.mobile_quartiles;
 }
 
 function startTimer() {
+	let timer = 20000;
 	document.getElementById("start-button").style.display = "none";
 	document.getElementById("list").style.display = "inline";
-	window.setTimeout(questionTime, 20 * 1000);
-	startStopwatch();
-}
-
-function startStopwatch() {
 	let c = document.getElementById("stopwatch");
 	let ctx = c.getContext("2d");
 	let startTime = Date.now();
@@ -106,13 +106,17 @@ function startStopwatch() {
 	ctx.arc(256, 256, 240, 0, 2 * Math.PI);
 	ctx.stroke();
 	ctx.lineWidth = 8;
-	window.setInterval(function() {
+	let intervalID = window.setInterval(function() {
+		if (timer - (Date.now() - startTime) <= 0) {
+			window.clearInterval(intervalID);
+			return undefined;
+		}
 		ctx.fillStyle = "#008800";
 		ctx.strokeStyle = ctx.fillStyle;
 		ctx.beginPath();
 		ctx.arc(
-			256 + Math.sin((Date.now() - startTime - 40) / 20000 * Math.PI * 2) * 184,
-			256 - Math.cos((Date.now() - startTime - 40) / 20000 * Math.PI * 2) * 184,
+			256 + Math.sin((Date.now() - startTime - 40) / timer * Math.PI * 2) * 184,
+			256 - Math.cos((Date.now() - startTime - 40) / timer * Math.PI * 2) * 184,
 			35, 0, 2 * Math.PI
 		);
 		ctx.fill();
@@ -121,8 +125,8 @@ function startStopwatch() {
 		ctx.strokeStyle = "#000000";
 		ctx.beginPath();
 		ctx.arc(
-			256 + Math.sin((Date.now() - startTime) / 20000 * Math.PI * 2) * 184,
-			256 - Math.cos((Date.now() - startTime) / 20000 * Math.PI * 2) * 184,
+			256 + Math.sin((Date.now() - startTime) / timer * Math.PI * 2) * 184,
+			256 - Math.cos((Date.now() - startTime) / timer * Math.PI * 2) * 184,
 			32, 0, 2 * Math.PI
 		);
 		ctx.fill();
@@ -130,20 +134,19 @@ function startStopwatch() {
 		ctx.font = "128px Arial";
 		ctx.clearRect(184, 310, 156, -128);
 		if (Date.now() - startTime < 19000) {
-			ctx.fillText((20000 - (Date.now() - startTime)).toString().slice(0, 2), 184, 300);
+			ctx.fillText((timer - (Date.now() - startTime)).toString().slice(0, 2), 184, 300);
 		} else {
-			ctx.fillText("0".concat((20000 - (Date.now() - startTime)).toString().slice(0, 1)), 184, 300);
+			ctx.fillText("0".concat((timer - (Date.now() - startTime)).toString().slice(0, 1)), 184, 300);
 		}
 		if (Date.now() - startTime > 10000) {
 			ctx.fillRect(250, 290, 10, 10);
 		}
 	}, Math.floor(1000 / 30));
-}
-
-function questionTime() {
-	document.getElementById("list").style.display = "none";
-	document.getElementById("form").style.display = "inline";
-	devTypeCheck()
+	window.setTimeout(function() {
+		document.getElementById("list").style.display = "none";
+		document.getElementById("form").style.display = "inline";
+		devTypeCheck()
+	}, timer);
 }
 
 function checkTextareaLineCount() {
@@ -164,4 +167,64 @@ function devTypeCheck() {
 	} else {
 		output.value = "desktop";
 	}
+}
+function qdchart() {
+	console.log("got here");
+	function fitToContainer(canvas){
+		canvas.style.width ='100%';
+		canvas.style.height ='100%';
+		canvas.width  = canvas.offsetWidth;
+		canvas.height = canvas.offsetHeight;
+	}
+	let c = document.getElementById("qdgraph");
+	fitToContainer(c);
+	let ctx = c.getContext("2d");
+	let w = c.width;
+	let h = c.height;
+	ctx.fillStyle = "#000000";
+	ctx.strokeStyle = "#000000"
+	ctx.lineWidth = 8;
+	function drawLine(x1, y1, x2, y2) {
+		ctx.moveTo(x1, y1);
+		ctx.lineTo(x2, y2);
+	}
+	window.setInterval(function() {
+		ctx.clearRect(0, 0, w, h);
+		let deskquarts = JSON.parse("[" + document.getElementById("deskquarts").innerHTML + "]");
+		let moblquarts = JSON.parse("[" + document.getElementById("moblquarts").innerHTML + "]");
+		let d1 = {
+			min: deskquarts[0],
+			q1: deskquarts[1],
+			q2: deskquarts[2],
+			q3: deskquarts[3],
+			q4: deskquarts[4],
+			max: deskquarts[5]
+		};
+		let d2 = {
+			min: moblquarts[0],
+			q1: moblquarts[1],
+			q2: moblquarts[2],
+			q3: moblquarts[3],
+			q4: moblquarts[4],
+			max: moblquarts[5]
+		};
+		function qxtocx(value) {
+			let min = Math.min(d1.min, d2.min);
+			let max = Math.max(d1.max, d2.max);
+			if (min == max) {
+				return 4;
+			}
+			return (value - min) / (max - min) * (w - 8) + 4;
+		}
+		ctx.beginPath();
+		drawLine(qxtocx(d1.min), 4, qxtocx(d1.min), h / 2 - 4);
+		drawLine(qxtocx(d2.min), h / 2 - 4, qxtocx(d2.min), h - 4);
+		drawLine(qxtocx(d1.min), h / 4, qxtocx(d1.q1), h / 4);
+		drawLine(qxtocx(d2.min), h * 0.75, qxtocx(d2.q1), h * 0.75);
+		drawLine(qxtocx(d1.q2), 4, qxtocx(d1.q2), h / 2 - 4);
+		drawLine(qxtocx(d2.q2), h / 2 - 4, qxtocx(d2.q2), h - 4);
+		ctx.rect(qxtocx(d1.q1), 4, qxtocx(d1.q2) - qxtocx(d1.q1), h / 2 - 8);
+		ctx.rect(qxtocx(d2.q1), 4, qxtocx(d2.q2) - qxtocx(d2.q1), h / 2 - 8);
+		ctx.stroke();
+	}, 1000);
 }

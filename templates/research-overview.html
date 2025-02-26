@@ -9,71 +9,89 @@
 			type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"
 		></script>
 	</head>
-   
 	<body onload="fetchStatsIntervall()">
-		<p>Identifiant : {{ research_id }}</p>
-		<table id="General" class="stat-field">
-			<tr><td colspan="2"><p>Général</p></td></tr>
+		<div style="display: none;">
+			<div id="chartdatax"></div>
+			<div id="chartdata0"></div>
+			<div id="chartdata1"></div>
+			<div id="chartdata2"></div>
+			<div id="chartdata3"></div>
+			<div id="deskquarts"></div>
+			<div id="moblquarts"></div>
+		</div>
+		<table cellpadding="0" cellspacing="5vw" style="width: 100%; height: 100%;">
+			<tr><td colspan="2"><p>Identifiant : {{ research_id }}</p></td></tr>
 			<tr>
 				<td style="width: 50%;">
-					Ordinateur :<br>
-					x̄ = <div id="deskAvr" style="display: inline;"></div><br>
-					x͂ = <div id="deskMed" style="display: inline;"></div>
+					<table cellpadding="0" cellspacing="0" id="General" class="stat-field general-stats">
+						<tr style="width: 100%;"><td colspan="2"><p>Général</p></td></tr>
+						<tr>
+							<td style="width: 50%;">
+								Ordinateur :<br>
+								x̄ = <div id="deskAvr" style="display: inline;"></div><br>
+								x͂ = <div id="deskMed" style="display: inline;"></div>
+							</td>
+							<td>
+								Mobile :<br>
+								x̄ = <div id="moblAvr" style="display: inline;"></div><br>
+								x͂ = <div id="moblMed" style="display: inline;"></div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<canvas id="maingraph" width="1024" height="512" class=""></canvas>
+							</td>
+							<script>
+								let mainchart = new Chart("maingraph", {
+									type: "line",
+									data: {
+										labels: [0],
+										datasets: [{
+											data: [0],
+											borderColor: "red",
+											fill: false
+										},{
+											data: [0],
+											borderColor: "green",
+											fill: false
+										},{
+											data: [0],
+											borderColor: "black",
+											fill: false
+										},{
+											data: [0],
+											borderColor: "blue",
+											fill: false
+										}]
+									},
+									options: {
+										legend: {display: false},
+										maintainAspectRatio: false,
+										tooltips: { enabled: false },
+										hover: { mode: null }
+									}
+								});
+								let timeCouter = 0;
+								window.setInterval(function() {
+									mainchart.data.labels = JSON.parse("[" + document.getElementById("chartdatax").innerHTML + "]");
+									mainchart.data.datasets[0].data = JSON.parse("[" + document.getElementById("chartdata0").innerHTML + "]");
+									mainchart.data.datasets[1].data = JSON.parse("[" + document.getElementById("chartdata1").innerHTML + "]");
+									mainchart.data.datasets[2].data = JSON.parse("[" + document.getElementById("chartdata2").innerHTML + "]");
+									mainchart.data.datasets[3].data = JSON.parse("[" + document.getElementById("chartdata3").innerHTML + "]");
+									mainchart.update();
+								}, 500);
+							</script>
+						</tr>
+					</table>
 				</td>
-				<td>
-					Mobile :<br>
-					x̄ = <div id="moblAvr" style="display: inline;"></div><br>
-					x͂ = <div id="moblMed" style="display: inline;"></div>
+				<td id="notif" class="stat-field" rowspan="2">
+					testin' roud
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2" style="width: 100%;">
-					<canvas id="maingraph" style="width:100%; height: 30%;"></canvas>
+				<td id="diagrams" class="stat-field" style="height: 100%;">
+					<canvas id="qdgraph"><script type="text/javascript">qdchart();</script></canvas>
 				</td>
-				<div style="visibility: hidden;">
-					<div id="chartdatax"></div>
-					<div id="chartdata0"></div>
-					<div id="chartdata1"></div>
-					<div id="chartdata2"></div>
-					<div id="chartdata3"></div>
-				</div>
-				<script id="graphscript">
-					let mainchart = new Chart("maingraph", {
-						type: "line",
-						data: {
-							labels: [0],
-							datasets: [{
-								data: [0],
-								borderColor: "red",
-								fill: false
-							},{
-								data: [0],
-								borderColor: "green",
-								fill: false
-							},{
-								data: [0],
-								borderColor: "black",
-								fill: false
-							},{
-								data: [0],
-								borderColor: "blue",
-								fill: false
-							}]
-						},
-						options: {
-							legend: {display: false}
-						}
-					});
-					let timeCouter = 0;
-					window.setInterval(function() {
-						mainchart.data.labels = JSON.parse("[" + document.getElementById("chartdatax").innerHTML + "]");
-						mainchart.data.datasets[0].data = JSON.parse("[" + document.getElementById("chartdata0").innerHTML + "]");
-						mainchart.data.datasets[1].data = JSON.parse("[" + document.getElementById("chartdata1").innerHTML + "]");
-						mainchart.data.datasets[2].data = JSON.parse("[" + document.getElementById("chartdata2").innerHTML + "]");
-						mainchart.data.datasets[3].data = JSON.parse("[" + document.getElementById("chartdata3").innerHTML + "]");
-						mainchart.update();
-					}, 500);
-				</script>
 			</tr>
 		</table>
 	</body>

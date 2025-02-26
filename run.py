@@ -15,9 +15,9 @@ counties = [
 	"butte",
 	"calaveras",
 	"colusa",
-	"contra Costa",
-	"del Norte",
-	"el Dorado",
+	"contra costa",
+	"delnorte",
+	"eldorado",
 	"fresno",
 	"glenn",
 	"humboldt",
@@ -27,7 +27,7 @@ counties = [
 	"kings",
 	"lake",
 	"lassen",
-	"los Angeles",
+	"losangeles",
 	"madera",
 	"marin",
 	"mariposa",
@@ -43,16 +43,16 @@ counties = [
 	"plumas",
 	"riverside",
 	"sacramento",
-	"san Benito",
-	"san Bernardino",
-	"san Diego",
-	"san Francisco",
-	"san Joaquin",
-	"san Luis Obispo",
-	"san Mateo",
-	"santa Barbara",
-	"santa Clara",
-	"santa Cruz",
+	"sanbenito",
+	"sanbernardino",
+	"sandiego",
+	"sanfrancisco",
+	"sanjoaquin",
+	"sanluis obispo",
+	"sanmateo",
+	"santa barbara",
+	"santaclara",
+	"santacruz",
 	"shasta",
 	"sierra",
 	"siskiyou",
@@ -68,16 +68,19 @@ class Result():
 	media: str
 	date: float
 	def __init__(self, anwser: str, media: str):
-		print(media)
 		self.raw = anwser
-		self.parsed = anwser.lower().replace(" ", "").replace("\r", "").split("\n")
+		self.parsed = anwser.lower().replace(" ", "").replace("\r", "").split("\n", 50)
+		while self.parsed.count(""):
+			self.parsed.remove("")
+		print(self.parsed)
 		counties_copy = counties.copy()
 		self.media = media
 		self.score = 0
 		self.date = time.time()
 		for item in self.parsed:
-			if get_close_matches(item, counties_copy, 1, 0.9) != []:
-				counties_copy.remove(get_close_matches(item, counties_copy, 1, 0.9)[0])
+			m = get_close_matches(item, counties_copy, 1, 0.85)
+			if len(m) > 0:
+				counties_copy.remove(m[0])
 				self.score += 1
 
 id_counter = 0
@@ -100,17 +103,17 @@ class Research():
 		stat_type == False || 0 => median"""
 		try:
 			timeline = [i[0] for i in sorted(zip([[j.score, j.media] for j in self.data], [j.date for j in self.data]))]
-			print(timeline)
 			incremental_list = []
 			ouput = []
+			j = 0
 			for i in timeline:
 				if i[1] == media:
 					incremental_list.append(i[0])
 				if stat_type:
-					ouput.append(stats.fmean(incremental_list if incremental_list else [0]))
+					ouput.append(abs(stats.fmean(incremental_list if incremental_list else [0])))
 				else:
-					ouput.append(stats.median(incremental_list if incremental_list else [0]))
-			print(incremental_list)
+					ouput.append(abs(stats.median(incremental_list if incremental_list else [0])))
+				j += 1
 			return ouput if ouput else [0]
 		except Exception as e:
 			print(str(e))
@@ -127,7 +130,15 @@ class Research():
 			"chart_y_0": self.get_graph_y(1, "desktop"),
 			"chart_y_1": self.get_graph_y(0, "desktop"),
 			"chart_y_2": self.get_graph_y(1, "mobile"),
-			"chart_y_3": self.get_graph_y(0, "mobile")
+			"chart_y_3": self.get_graph_y(0, "mobile"),
+			"desktop_quartiles":
+				[min(desktop_scores if desktop_scores else [0])] +
+				stats.quantiles(desktop_scores if len(desktop_scores) >= 2 else [0, 0], n=6, method="inclusive") +
+				[max(desktop_scores if desktop_scores else [0])],
+			"mobile_quartiles":
+				[min(mobile_scores if mobile_scores else [0])] +
+				stats.quantiles(mobile_scores if len(mobile_scores) >= 2 else [0, 0], n=6, method="inclusive") +
+				[min(mobile_scores if mobile_scores else [0])]
 		}
 
 def get_research_by_id(rid):
@@ -227,6 +238,7 @@ def research_form(rid):
 			return app.redirect("/")
 		return render_template("form-temp.html", url_rid=rid)
 	except Exception as e:
+		print(e)
 		return str(e)
 
 @app.route("/favicon.ico")
