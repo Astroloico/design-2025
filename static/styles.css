@@ -1,7 +1,7 @@
 body {
     font-size: 30px;
     font-family: sans-serif;
-    text-align: center;;
+    text-align: center;
     font: bold;
 }
 
@@ -102,4 +102,34 @@ textarea {
 .qdcharts-overrides {
     padding: 2rem;
     padding-top: 2rem;
+}
+#notif {
+    vertical-align: top;
+    margin: 0px;
+    padding: 0px;
+}
+#ntflist {
+    max-height: calc(80vh - 10px);
+    overflow: scroll;
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+    width: 100%;
+}
+.nlist-elems {
+    margin: 1%;
+    width: 98%;
+}
+@keyframes nlist-sliding {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0%);
+    }
+}
+.nlist-animate {
+    animation-duration: 0.5s;
+    animation-name: nlist-sliding;
+    animation-iteration-count: 1;
 }

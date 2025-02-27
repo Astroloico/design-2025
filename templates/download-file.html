@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body {
+				font-size: 30px;
+				font-family: sans-serif;
+				font: bold;
+			}
+			h1 {
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Résultats de recherche</h1><br>
+		<p>
+			<h2>Information</h2><br>
+			Nom : {{ name }}<br>
+			Date : {{ date }}<br>
+			Nombre de données : {{ lenght }}<br>
+		</p>
+		<p>
+			<h2>Résumé des résultats</h2>
+			<table>
+				<thead>
+					<tr>
+						<td></td>
+						<td>Ordinateur</td>
+						<td>Cellulaire</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Moyenne :</td>
+						<td>{{ desktop_average }}</td>
+						<td>{{ mobile_average }}</td>
+					</tr>
+					<tr>
+						<td>Médiane :</td>
+						<td>{{ desktop_median }}</td>
+						<td>{{ mobile_median }}</td>
+					</tr>
+					<tr>
+						<td>Quantité de données :</td>
+						<td>{{ desktop_len }}</td>
+						<td>{{ mobile_len }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</p>
+		<p>
+			<details>
+				<summary>Résultats complets</summary>
+				{{ full_data }}
+			</details>
+		</p>
+	</body>
+</html>

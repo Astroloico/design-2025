@@ -8,11 +8,27 @@
 	</head>
    
 	<body>
-		<p><a href="/research-creation">Créer une recherche</a></p>
-		<p><a href="/research/login">Accéder aux résultats de votre recherche</a></p>
-		<p><a href="/research/0">Test form</a></p>
-		<p>Participer a une recherche :<br>id: <input type="number"
-			onkeyup="document.getElementById('customresearchlink').href = '/research/' + String(this.value)"
-		><br><a id="customresearchlink" href="/research/0">Commencer</a></p>
+		<div class="small-field center" style="width: fit-content;">
+			<p><a href="/research-creation">Créer une recherche</a></p>
+			<p><a href="/research/login">Accéder aux résultats de votre recherche</a></p>
+			<p><a href="/research/0">Test form</a></p>
+			<p>Participer a une recherche :<br>id: <input type="number"
+				onkeyup="document.getElementById('customresearchlink').href = '/research/' + String(this.value)"
+			><br><a id="customresearchlink" href="/research/0">Commencer</a></p>
+			<p>debug data :<br>id: <input id="dscore" type="number" onkeyup="debugfn()">
+				- check if mobile<input id="dmedia" type="checkbox" onclick="debugfn()">
+				<br><a id="debugdata" href="/debugdata/0/m/50">send</a>
+			</p><script>
+				function debugfn() {
+					let media = ""
+					if (document.getElementById("dmedia").checked) {
+						media = "m";
+					} else {
+						media = "d";
+					}
+					document.getElementById("debugdata").href = "/debugdata/" + media + "/" + String(document.getElementById("dscore").value);
+				}
+			</script>
+		</div>
 	</body>
 </html>

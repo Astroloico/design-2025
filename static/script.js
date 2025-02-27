@@ -75,6 +75,7 @@ async function fetchStats() {
 		document.getElementById("deskquarts"),
 		document.getElementById("moblquarts")
 	];
+	let ntflist = document.getElementById("ntflist");
 	let response = await fetch(window.location + "/get-stats");
 	let data = await response.json();
 	deskMed.innerHTML = data.desktop_median;
@@ -88,6 +89,17 @@ async function fetchStats() {
 	chartdatadivs[4].innerHTML = data.chart_x;
 	chartdatadivs[5].innerHTML = data.desktop_quartiles;
 	chartdatadivs[6].innerHTML = data.mobile_quartiles;
+	response = await fetch(window.location + "/get-new-data");
+	data = await response.text();
+	if (data != "") {
+		ntflist.innerHTML = data + ntflist.innerHTML;
+		ntflist.childNodes.forEach(element => {
+			if (element.classList.contains("nlist-animate")) {
+				element.classList.remove("nlist-animate");
+			}
+			element.classList.add("nlist-animate");
+		});
+	}
 }
 
 function startTimer() {
@@ -221,10 +233,14 @@ function qdchart() {
 		drawLine(qxtocx(d2.min), h / 2 - 4, qxtocx(d2.min), h - 4);
 		drawLine(qxtocx(d1.min), h / 4, qxtocx(d1.q1), h / 4);
 		drawLine(qxtocx(d2.min), h * 0.75, qxtocx(d2.q1), h * 0.75);
+		drawLine(qxtocx(d1.q3), h / 4, qxtocx(d1.max), h / 4);
+		drawLine(qxtocx(d2.q3), h * 0.75, qxtocx(d2.max), h * 0.75);
 		drawLine(qxtocx(d1.q2), 4, qxtocx(d1.q2), h / 2 - 4);
-		drawLine(qxtocx(d2.q2), h / 2 - 4, qxtocx(d2.q2), h - 4);
-		ctx.rect(qxtocx(d1.q1), 4, qxtocx(d1.q2) - qxtocx(d1.q1), h / 2 - 8);
-		ctx.rect(qxtocx(d2.q1), 4, qxtocx(d2.q2) - qxtocx(d2.q1), h / 2 - 8);
+		drawLine(qxtocx(d2.q2), h / 2 + 4, qxtocx(d2.q2), h - 4);
+		drawLine(qxtocx(d1.max), 4, qxtocx(d1.max), h / 2 - 4);
+		drawLine(qxtocx(d2.max), h / 2 + 4, qxtocx(d2.max), h - 4);
+		ctx.rect(qxtocx(d1.q1), 4, qxtocx(d1.q3) - qxtocx(d1.q1), h / 2 - 8);
+		ctx.rect(qxtocx(d2.q1), h / 2 + 4, qxtocx(d2.q3) - qxtocx(d2.q1), h / 2 - 8);
 		ctx.stroke();
-	}, 1000);
+	}, 10);
 }

@@ -1,0 +1,26 @@
+<details>
+    <summary>Résultat #{{ num }}</summary>
+    Date : {{ date }}
+    Type d'appareil : {{ media }}
+    Score sur 50 : {{ score }}
+    <details>
+        <summary>Réponse brute</summary>
+        {{ raw }}
+    </details>
+    <details>
+        <summary>Résultat de l'analysée automatique</summary>
+        {{ parsed }}
+    </details>
+    <details>
+        <summary>Bonnes réponses</summary>
+        {{ good }}
+    </details>
+    <details>
+        <summary>Association automatique des bonnes réponses</summary>
+        {{ matches }}
+    </details>
+    <details>
+        <summary>Scores de similarité</summary>
+        {{ sim_scores }}
+    </details>
+</details>

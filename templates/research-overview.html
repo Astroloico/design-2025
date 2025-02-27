@@ -19,12 +19,13 @@
 			<div id="deskquarts"></div>
 			<div id="moblquarts"></div>
 		</div>
-		<table cellpadding="0" cellspacing="5vw" style="width: 100%; height: 100%;">
-			<tr><td colspan="2"><p>Identifiant : {{ research_id }}</p></td></tr>
+		<table cellpadding="0" cellspacing="5vw" style="width: 100%; height: 80vh;">
 			<tr>
 				<td style="width: 50%;">
 					<table cellpadding="0" cellspacing="0" id="General" class="stat-field general-stats">
-						<tr style="width: 100%;"><td colspan="2"><p>Général</p></td></tr>
+						<tr style="width: 100%;"><td><p>Général</p></td><td>ID : {{ research_id }}
+							<div style="text-align: right;"><a href="{{ key }}/download/resultats.html" download="Résultats.html">Télécharger les résultats</a></div></td>
+						</tr>
 						<tr>
 							<td style="width: 50%;">
 								Ordinateur :<br>
@@ -32,7 +33,7 @@
 								x͂ = <div id="deskMed" style="display: inline;"></div>
 							</td>
 							<td>
-								Mobile :<br>
+								Téléphone :<br>
 								x̄ = <div id="moblAvr" style="display: inline;"></div><br>
 								x͂ = <div id="moblMed" style="display: inline;"></div>
 							</td>
@@ -47,25 +48,28 @@
 									data: {
 										labels: [0],
 										datasets: [{
+											label: "ordinateur x̄",
 											data: [0],
 											borderColor: "red",
 											fill: false
 										},{
+											label: "ordinateur x̃",
 											data: [0],
 											borderColor: "green",
 											fill: false
 										},{
+											label: "téléphone x̄",
 											data: [0],
 											borderColor: "black",
 											fill: false
 										},{
+											label: "téléphone x̃",
 											data: [0],
 											borderColor: "blue",
 											fill: false
 										}]
 									},
 									options: {
-										legend: {display: false},
 										maintainAspectRatio: false,
 										tooltips: { enabled: false },
 										hover: { mode: null }
@@ -85,11 +89,11 @@
 					</table>
 				</td>
 				<td id="notif" class="stat-field" rowspan="2">
-					testin' roud
+					<div><ul id="ntflist"></ul></div>
 				</td>
 			</tr>
 			<tr>
-				<td id="diagrams" class="stat-field" style="height: 100%;">
+				<td id="diagrams" class="stat-field qdcharts-overrides" style="height: 100%;">
 					<canvas id="qdgraph"><script type="text/javascript">qdchart();</script></canvas>
 				</td>
 			</tr>
