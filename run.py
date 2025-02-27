@@ -5,7 +5,7 @@ from flask import request
 from difflib import get_close_matches, SequenceMatcher
 import time
 import markupsafe
-flask_app = Flask(__name__)
+app = Flask(__name__)
 
 database = []
 
@@ -177,27 +177,27 @@ def get_research_by_id(rid):
 def get_key(password):
 	return str(hash(str(password))).removeprefix("-")
 
-@flask_app.route("/")
-@flask_app.route("/index")
-@flask_app.route("/index.html")
+@app.route("/")
+@app.route("/index")
+@app.route("/index.html")
 def index():
 	return render_template("index.html")
 
-@flask_app.route("/research-creation")
-@flask_app.route("/research-creation.html")
+@app.route("/research-creation")
+@app.route("/research-creation.html")
 def research_creation_page():
 	return render_template("research-creation.html")
 
-@flask_app.route("/create-research/<name>/<password>")
+@app.route("/create-research/<name>/<password>")
 def create_research(name, password):
 	try:
 		database.append(Research(name, password))
-		return flask_app.redirect(f"/research/{database[len(database) - 1].rid}/overview/{get_key(hash(password))}")
+		return app.redirect(f"/research/{database[len(database) - 1].rid}/overview/{get_key(hash(password))}")
 	except Exception as e:
 		return str(e)
 
-@flask_app.route("/research/<rid>/overview/<key>")
-@flask_app.route("/research/<rid>/overview.html/<key>")
+@app.route("/research/<rid>/overview/<key>")
+@app.route("/research/<rid>/overview.html/<key>")
 def research_overview(rid, key):
 	try:
 		r = get_research_by_id(int(rid))
@@ -209,21 +209,21 @@ def research_overview(rid, key):
 	except Exception as e:
 		return str(e)
 
-@flask_app.route("/research/login/<rid>/<name>/<password>")
-@flask_app.route("/research/login.html/<rid>/<name>/<password>")
+@app.route("/research/login/<rid>/<name>/<password>")
+@app.route("/research/login.html/<rid>/<name>/<password>")
 def research_login(rid, name, password):
 	try:
 		r = get_research_by_id(int(rid))
 		if not r:
-			return flask_app.redirect("/research/login", error_pws_div_default = "incorrect, veuillez réessayer")
+			return app.redirect("/research/login", error_pws_div_default = "incorrect, veuillez réessayer")
 		if r.key != get_key(hash(password)):
-			return flask_app.redirect("/research/login", error_pws_div_default = "incorrect, veuillez réessayer")
-		return flask_app.redirect(f"/research/{rid}/overview/{r.key}")
+			return app.redirect("/research/login", error_pws_div_default = "incorrect, veuillez réessayer")
+		return app.redirect(f"/research/{rid}/overview/{r.key}")
 	except Exception as e:
 		return str(e)
 
-@flask_app.route("/research/<rid>/overview/<key>/get-stats")
-@flask_app.route("/research/<rid>/overview.html/<key>/get-stats")
+@app.route("/research/<rid>/overview/<key>/get-stats")
+@app.route("/research/<rid>/overview.html/<key>/get-stats")
 def get_stats(rid, key):
 	try:
 		r = get_research_by_id(int(rid))
@@ -236,7 +236,7 @@ def get_stats(rid, key):
 		print(str(e))
 		return str(e)
 
-@flask_app.route("/research/<rid>/overview/<key>/get-new-data")
+@app.route("/research/<rid>/overview/<key>/get-new-data")
 def get_new_data(rid, key):
 	try:
 		r = get_research_by_id(int(rid))
@@ -249,12 +249,12 @@ def get_new_data(rid, key):
 		print(str(e))
 		return str(e)
 
-@flask_app.route("/research/login")
-@flask_app.route("/research/login.html")
+@app.route("/research/login")
+@app.route("/research/login.html")
 def login():
 	return render_template("login.html")
 
-@flask_app.route("/login-research/<name>/<password>/<rid>")
+@app.route("/login-research/<name>/<password>/<rid>")
 def fetch_key(name, password, rid):
 	try:
 		r = get_research_by_id(int(rid))
@@ -266,7 +266,7 @@ def fetch_key(name, password, rid):
 	except Exception as e:
 		return "e " + str(e)
 
-@flask_app.route("/research/<rid>", methods=["GET", "POST"])
+@app.route("/research/<rid>", methods=["GET", "POST"])
 def research_form(rid):
 	try:
 		r = get_research_by_id(int(rid))
@@ -274,22 +274,22 @@ def research_form(rid):
 			return "404 - research not found"
 		if request.method == "POST":
 			r.data.append(Result(request.form.get("anwser"), request.form.get("devtype")))
-			return flask_app.redirect("/")
+			return app.redirect("/")
 		return render_template("form-temp.html", url_rid=rid)
 	except Exception as e:
 		print(e)
 		return str(e)
 
-@flask_app.route("/favicon.ico")
+@app.route("/favicon.ico")
 def logo():
 	return send_from_directory("static/", "logo.ico")
 
-@flask_app.route("/debugdata/<media>/<num>")
+@app.route("/debugdata/<media>/<num>")
 def debugdata(num, media):
 	database[0].data.append(Result("\n".join(counties[0 : int(num)]), "desktop" if (media == "d") else "mobile"))
-	return flask_app.redirect("/")
+	return app.redirect("/")
 
-@flask_app.route("/research/<rid>/overview/<key>/download/resultats.html")
+@app.route("/research/<rid>/overview/<key>/download/resultats.html")
 def download_results(rid, key):
 	try:
 		r = get_research_by_id(int(rid))
@@ -352,4 +352,4 @@ def get_ip():
 
 if __name__ == '__main__':
 	database.append(Research('n', 'p'))
-	flask_app.run(debug = True, host = get_ip())
+	app.run(debug = True, host = get_ip())
