@@ -103,7 +103,7 @@ async function fetchStats() {
 }
 
 function startTimer() {
-	let timer = 20000;
+	let timer = 120000;
 	document.getElementById("start-button").style.display = "none";
 	document.getElementById("list").style.display = "inline";
 	let c = document.getElementById("stopwatch");
